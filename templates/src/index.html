@@ -1,0 +1,289 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div id="app">
+    <v-app id="inspire">
+        <v-card height="100%">
+            <v-toolbar
+                    color="#09244B"
+                    dark
+                    flat
+            >
+                <v-row>
+                    <v-row>
+                        <v-col cols="10">
+                            <br>
+                            <v-row>
+                                <v-img
+                                        src="/static/images/LogoSmall.png"
+                                        max-height="200"
+                                        max-width="60"
+                                ></v-img>
+                            </v-row>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                        <v-col cols="2">
+                            <br>
+                            <div v-if="!spinProfile">
+                                <i id="spinChar" class="fas fa-spinner fa-spin fa-2x"></i>
+                            </div>
+                            <div v-else>
+                                <v-avatar>
+                                    <img
+                                            :src="profileLIFF.pictureURL"
+                                            alt="attr"
+                                    >
+                                </v-avatar>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-row>
+                <template v-slot:extension>
+                    <v-tabs
+                            v-model="tab"
+                            align-with-title
+                    >
+                        <v-tabs-slider color="yellow"></v-tabs-slider>
+
+                        <v-tab
+                                v-for="item in items"
+                                :key="item"
+                        >
+                            [[ item ]]
+                        </v-tab>
+                    </v-tabs>
+                </template>
+            </v-toolbar>
+
+            <v-tabs-items v-model="tab">
+                <v-tab-item>
+                    <v-card>
+                        <v-card-text>
+                            <v-container>
+                                <v-card-title class="headline">
+                                    <strong>
+                                        <u>
+                                            Supplier
+                                        </u>
+                                    </strong>
+                                </v-card-title>
+                                <v-form
+                                        ref="form"
+                                        v-model="valid"
+                                        lazy-validation
+                                >
+                                    <v-text-field
+                                            v-model="formElements.discount"
+                                            :rules="nameRules"
+                                            label="Discount (%)"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+                                    <v-text-field
+                                            v-model="formElements.cr"
+                                            :rules="nameRules"
+                                            label="CR (Term)"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+                                    <v-menu
+                                            ref="menu1"
+                                            v-model="menu1"
+                                            :close-on-content-click="false"
+                                            transition="scale-transition"
+                                            offset-y
+                                            max-width="290px"
+                                            min-width="auto"
+                                    >
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field
+                                                    v-model="dateFormatted"
+                                                    label="Date"
+                                                    hint="DD/MM/YYYY format"
+                                                    persistent-hint
+                                                    prepend-icon="mdi-calendar"
+                                                    v-bind="attrs"
+                                                    @blur="date = parseDate(dateFormatted)"
+                                                    v-on="on"
+                                                    outlined
+                                                    dense
+                                            >
+
+                                            </v-text-field>
+                                        </template>
+                                        <v-date-picker
+                                                v-model="date"
+                                                no-title
+                                                @input="menu1 = false"
+                                        ></v-date-picker>
+                                    </v-menu>
+
+                                    <v-text-field
+                                            v-model="formElements.quotation"
+                                            :rules="nameRules"
+                                            label="Quotation No."
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+                                    <v-text-field
+                                            v-model="formElements.delivery"
+                                            :rules="nameRules"
+                                            label="Delivery Day"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+                                    <v-text-field
+                                            v-model="formElements.payment"
+                                            :rules="nameRules"
+                                            label="Condition Payment"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+                                    <v-text-field
+                                            v-model="formElements.specialDiscount"
+                                            :rules="nameRules"
+                                            label="Special Discount"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+                                    <v-text-field
+                                            v-model="formElements.advance"
+                                            :rules="nameRules"
+                                            label="Advance (%)"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+                                    <v-text-field
+                                            v-model="formElements.guarantee"
+                                            :rules="nameRules"
+                                            label="Bank Guarantee (%)"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+                                    <v-text-field
+                                            v-model="formElements.remark"
+                                            :rules="nameRules"
+                                            label="Remark"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+
+                                    <v-text-field
+                                            v-model="formElements.contact"
+                                            :rules="nameRules"
+                                            label="Contact By"
+                                            outlined
+                                            dense
+                                            required
+                                    ></v-text-field>
+
+                                    <v-spacer></v-spacer>
+
+                                    <v-btn
+                                            :disabled="!valid"
+                                            color="success"
+                                            class="mr-4"
+                                            @click="validate"
+                                            small
+                                    >
+                                        <v-icon
+                                                dark
+                                                small
+                                        >
+                                            mdi-send
+                                        </v-icon>
+                                        ส่งข้อมูล
+                                    </v-btn>
+                                </v-form>
+                                <br>
+                                <br>
+                                <h4 :hidden="!payload">
+                                    [[result]]
+                                </h4>
+                            </v-container>
+                        </v-card-text>
+                    </v-card>
+                </v-tab-item>
+                <v-tab-item>
+                    <v-card>
+                        <v-card-title class="headline">
+                            <strong>
+                                <u>
+                                    Attach file
+                                </u>
+                            </strong>
+                        </v-card-title>
+
+                        <v-card-text>
+                            <v-file-input
+                                    @change="previewImage"
+                                    accept="*"
+                                    counter
+                                    multiple
+                                    prepend-icon="mdi-paperclip"
+                                    v-model="imgFile"
+                                    class="rounded-pill"
+                                    label="Image Profile"
+                                    clearable
+                                    outlined
+                                    dense
+                                    :show-size="1000"
+                            >
+                                <template v-slot:selection="{ index, text }">
+                                    <v-chip
+                                            v-if="index < 3"
+                                            label
+                                            color="primary"
+                                    >
+                                        [[ text ]]
+                                    </v-chip>
+                                    <span
+                                            v-else-if="index === 3"
+                                            class="overline grey--text text--darken-3 mx-2"
+                                    >
+                                        +[[ imgFile.length - 2 ]] File(s)
+                                    </span>
+                                </template>
+                            </v-file-input>
+
+
+                            <v-img
+                                    :src="url"
+                            >
+
+                            </v-img>
+
+                        </v-card-text>
+
+                    </v-card>
+                </v-tab-item>
+            </v-tabs-items>
+        </v-card>
+
+
+    </v-app>
+</div>
+
+{% block script %}
+<script src="/static/vue/index.js">
+</script>
+{% endblock %}
+
+{% endblock %}

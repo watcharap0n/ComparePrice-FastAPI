@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<br><br><br>
+<v-container>
+    <br>
+    <div class="text-center">
+        <div class="text-center">
+            <div v-if="!spinProfile">
+                <i id="spinChar" class="fas fa-spinner fa-spin fa-2x"></i>
+            </div>
+            <div v-else>
+                <v-avatar>
+                    <img :src="profileLIFF.pictureURL" alt="src">
+                </v-avatar>
+                <h5 style="margin-top: 10px">
+                    [[profileLIFF.displayName]]
+                </h5>
+            </div>
+        </div>
+        <br>
+        <h5>กรุณากรอกเลขประจำตัวผู้เสียภาษี หรือเลขที่บัตรประชาชนเพื่อลงทะเบียน รับรหัส Vendor Code</h5>
+        <br>
+        <v-form ref="form" v-model="valid" layzy-validation>
+            <v-text-field v-model="taxId" :counter="13" :rules="taxRules" outlined label="Tax ID">
+                <v-btn :disabled="!valid" :loading="!spinTax" @click="validate" x-small slot="append"
+                       color="green">
+                    <v-icon color="white">
+                        mdi-account-reactivate
+                    </v-icon>
+                </v-btn>
+            </v-text-field>
+        </v-form>
+    </div>
+</v-container>
+
+{% block script %}
+<script src="/static/vue/register.js">
+</script>
+{% endblock %}
+
+<style>
+    #spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        color: lightgreen;
+    }
+</style>
+
+
+{% endblock %}
