@@ -57,7 +57,7 @@ new Vue({
                     .then((res) => {
                         let data = res.data.data;
                         if (res.data.success === true) {
-                            if (data.line_authentication === null) {
+                            if (data.line_authentication === null || !data.line_authentication) {
                                 create.acct_no = data.acct_no
                                 axios.post(path, create)
                                     .then((res) => {
