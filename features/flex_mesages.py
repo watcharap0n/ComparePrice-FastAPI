@@ -1,7 +1,7 @@
 from linebot.models import FlexSendMessage
 
 
-def compare_price_flex(docno, docdate, duedate, remark):
+def compare_price_flex(docno, docdate, duedate, remark, endpoint):
     flex_msg = FlexSendMessage(
         alt_text='Compare Price!',
         contents={
@@ -85,7 +85,7 @@ def compare_price_flex(docno, docdate, duedate, remark):
                                 "action": {
                                     "type": "uri",
                                     "label": "เสนอราคา",
-                                    "uri": "https://linecorp.com"
+                                    "uri": f"{endpoint}"
                                 },
                                 "height": "sm",
                                 "style": "secondary"
