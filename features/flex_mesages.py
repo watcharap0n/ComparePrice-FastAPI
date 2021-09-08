@@ -1,7 +1,7 @@
 from linebot.models import FlexSendMessage
 
 
-def compare_price_flex(docno, docdate, duedate, remark, endpoint):
+def compare_price_flex(docno, docdate, duedate, remark, endpoint, acct_name, mainname):
     flex_msg = FlexSendMessage(
         alt_text='Compare Price!',
         contents={
@@ -29,7 +29,7 @@ def compare_price_flex(docno, docdate, duedate, remark, endpoint):
                     },
                     {
                         "type": "text",
-                        "text": "เรียน ร้านค้าวัสดุดี",
+                        "text": f"เรียน {acct_name}",
                         "weight": "bold",
                         "size": "md",
                         "margin": "xs",
@@ -37,7 +37,7 @@ def compare_price_flex(docno, docdate, duedate, remark, endpoint):
                     },
                     {
                         "type": "text",
-                        "text": f"มีการขอราคาจาก บริษัท คอนเจริญ จำกัด",
+                        "text": f"มีการขอราคาจาก บริษัท {mainname}",
                         "size": "sm",
                         "color": "#666666",
                         "wrap": True,
