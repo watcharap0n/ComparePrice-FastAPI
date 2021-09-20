@@ -5,6 +5,7 @@ from features.flex_mesages import compare_price_flex
 from models.receive import ReceiveCard, ReceiveText
 from db import MongoDB
 import os
+import datetime
 
 client = os.environ.get('MONGODB_URI')
 # client = 'mongodb://127.0.0.1:27017'
@@ -60,7 +61,6 @@ async def receive(item: ReceiveCard):
             'status': status (True, False)
         }:
     """
-    oa = []
     item = item.dict()
     for i in item['line']:
         line_bot_api = LineBotApi(i['channel_access_token'])
@@ -68,24 +68,26 @@ async def receive(item: ReceiveCard):
         i['displayName'] = profile['displayName']
         i['img'] = profile['img']
         i['status'] = profile['status']
-        db.insert_one(collection='user_flex', data=i)
+        _d = datetime.datetime.now()
+        i["date"] = _d.strftime("%d/%m/%y")
+        i["time"] = _d.strftime("%H:%M:%S")
+        db.insert_one(collection='send_flex', data=i)
+        del i['_id']
         userId = i['userId']
         print(i)
         if i['remark']:
             line_bot_api.push_message(userId,
-                                      compare_price_flex(docno=i['docno'], docdate=i['docdate'], duedate=i['duedate'],
-                                                         remark=i['remark'], endpoint=i['endpoint'], mainname=i.get('mainname'),
-                                                         acct_name=i.get('acct_name')))
+                                      compare_price_flex(mainname=i['mainname'], docdate=i['docdate'],
+                                                         acct_name=i['acct_name'], remark=i['remark'],
+                                                         duedate=i['duedate'], docno=i['docno'],
+                                                         endpoint=i['endpoint']))
         else:
             line_bot_api.push_message(userId,
-                                      compare_price_flex(docno=i['docno'], docdate=i['docdate'], duedate=i['duedate'],
-                                                         remark='ไม่มีข้อความ', endpoint=i['endpoint'], acct_name=i.get('acct_name'),
-                                                         mainname=i.get('mainname')))
-
-        bot_info = line_bot_api.get_bot_info()
-        oa.append(bot_info.display_name)
+                                      compare_price_flex(mainname=i['mainname'], docdate=i['docdate'],
+                                                         acct_name=i['acct_name'], remark='ไม่มีข้อมูลเพิ่มเติม',
+                                                         duedate=i['duedate'], docno=i['docno'],
+                                                         endpoint=i['endpoint']))
     return {
-        f'LINE OA: ': ", ".join(oa),
         'message': 'please check your account LINE',
         'status': True
     }
@@ -137,7 +139,7 @@ async def receive(item: ReceiveText):
         i['displayName'] = profile['displayName']
         i['img'] = profile['img']
         i['status'] = profile['status']
-        db.insert_one(collection='user_flex', data=i)
+        db.insert_one(collection='send_message', data=i)
         userId = i['userId']
         text = i['text']
         line_bot_api.push_message(userId, TextSendMessage(text=text))

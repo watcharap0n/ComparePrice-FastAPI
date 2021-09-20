@@ -10,6 +10,8 @@ class Flex(BaseModel):
     duedate: Optional[str] = None
     remark: Optional[str] = None
     endpoint: Optional[str] = None
+    acct_name: Optional[str] = None
+    mainname: Optional[str] = None
 
 
 class Text(BaseModel):
