@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from linebot.models import TextSendMessage
 from linebot import LineBotApi
 from features.flex_mesages import compare_price_flex
 from models.receive import ReceiveCard, ReceiveText
+from starlette.responses import JSONResponse
 from db import MongoDB
 import os
 import datetime
@@ -89,10 +90,10 @@ async def receive(item: ReceiveCard):
                                                              endpoint=i['endpoint']))
         return {
             'message': 'please check your account LINE',
-            'detail': {'status': True}
+            'status': True
         }
     except:
-        raise HTTPException(status_code=400, detail={'status': False})
+        return JSONResponse({'message': 'error please check your value!', 'status': False}, status_code=400)
 
 
 @route.post(
@@ -100,7 +101,7 @@ async def receive(item: ReceiveCard):
     summary="Create a message",
     response_description="The create message",
 )
-async def receive(item: ReceiveText):
+async def receive_text(item: ReceiveText):
     """
     Create a flex message to send LINE OA pass channel access token
 
@@ -151,7 +152,7 @@ async def receive(item: ReceiveText):
         return {
             f'LINE OA: ': ", ".join(oa),
             'message': 'please check your account LINE',
-            'detail': {'status': True}
+            'status': True
         }
     except:
-        raise HTTPException(status_code=400, detail={'status': False})
+        return JSONResponse({'message': 'error please check your value!', 'status': False}, status_code=400)
