@@ -73,11 +73,13 @@ async def receive(item: ReceiveCard):
         if i['remark']:
             line_bot_api.push_message(userId,
                                       compare_price_flex(docno=i['docno'], docdate=i['docdate'], duedate=i['duedate'],
-                                                         remark=i['remark'], endpoint=i['endpoint'], mainname=i.get('mainname'), acct_name=i.get('acct_name')))
+                                                         remark=i['remark'], endpoint=i['endpoint'], mainname=i.get('mainname'),
+                                                         acct_name=i.get('acct_name')))
         else:
             line_bot_api.push_message(userId,
                                       compare_price_flex(docno=i['docno'], docdate=i['docdate'], duedate=i['duedate'],
-                                                         remark='ไม่มีข้อความ', endpoint=i['endpoint'], acct_name=i.get('acct_name'), mainname=i.get('mainname')))
+                                                         remark='ไม่มีข้อความ', endpoint=i['endpoint'], acct_name=i.get('acct_name'),
+                                                         mainname=i.get('mainname')))
 
         bot_info = line_bot_api.get_bot_info()
         oa.append(bot_info.display_name)
