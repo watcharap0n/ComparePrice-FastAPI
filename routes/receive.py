@@ -25,7 +25,7 @@ def get_profile(user_id, line_bot_api):
 
 
 @route.post(
-    '/receive', status_code=201,
+    '/receive', status_code=200,
     summary="Create a flex message",
     response_description="The create flex message",
 )
@@ -70,6 +70,7 @@ async def receive(item: ReceiveCard):
         i['status'] = profile['status']
         db.insert_one(collection='user_flex', data=i)
         userId = i['userId']
+        print(i)
         if i['remark']:
             line_bot_api.push_message(userId,
                                       compare_price_flex(docno=i['docno'], docdate=i['docdate'], duedate=i['duedate'],

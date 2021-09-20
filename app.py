@@ -49,5 +49,4 @@ async def root_register(request: Request):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8008))
-    uvicorn.run('app:app', debug=True, port=port)
+    uvicorn.run('app:app', debug=True, port=8787)
