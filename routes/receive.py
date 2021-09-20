@@ -6,6 +6,7 @@ from models.receive import ReceiveCard, ReceiveText
 from starlette.responses import JSONResponse
 from db import MongoDB
 import os
+import pytz
 import datetime
 
 client = os.environ.get('MONGODB_URI')
@@ -70,7 +71,8 @@ async def receive(item: ReceiveCard):
             i['displayName'] = profile['displayName']
             i['img'] = profile['img']
             i['status'] = profile['status']
-            _d = datetime.datetime.now()
+            tz = pytz.timezone('Asia/Bangkok')
+            _d = datetime.datetime.now(tz)
             i["date"] = _d.strftime("%d/%m/%y")
             i["time"] = _d.strftime("%H:%M:%S")
             db.insert_one(collection='send_flex', data=i)
@@ -143,6 +145,10 @@ async def receive_text(item: ReceiveText):
             i['displayName'] = profile['displayName']
             i['img'] = profile['img']
             i['status'] = profile['status']
+            tz = pytz.timezone('Asia/Bangkok')
+            _d = datetime.datetime.now(tz)
+            i["date"] = _d.strftime("%d/%m/%y")
+            i["time"] = _d.strftime("%H:%M:%S")
             db.insert_one(collection='send_message', data=i)
             userId = i['userId']
             text = i['text']
